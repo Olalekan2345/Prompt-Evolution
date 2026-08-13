@@ -122,9 +122,9 @@ the timeline becomes impossible · an established trait quietly changed.
 contradicted · a standing `rule` constraint is being violated · a decision is being treated as settled
 when its canon still says `open`.
 
-> ⚠️ **Continuity conflict.** Canon: «Walrus storage stays fully hidden in the product UI —
-> dev-panel variant rejected (settled, 2026-07-10)». This proposal exposes blob IDs in a judging panel.
-> Retcon the canon, or revise the proposal?
+> ⚠️ **Continuity conflict.** Canon: «Session tokens are never written to application logs — the
+> debug-logging variant was rejected (settled, 2026-03-14)». This change writes token values into the
+> request log. Retcon the canon, or revise the change?
 
 Only proceed once the author chooses. If they retcon, that is a deliberate change — supersede it per
 §5 with a fresh `effective_at`. Never flip a status silently.
