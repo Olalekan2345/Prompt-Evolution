@@ -1,0 +1,16 @@
+{
+  "name": "continuity-keeper-v2-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Reproducible demo scripts for Continuity Keeper v2 on Walrus Memory",
+  "scripts": {
+    "check": "node check.mjs",
+    "demo": "node demo.mjs",
+    "calibrate": "node calibrate.mjs",
+    "write": "node demo-live-write.mjs"
+  },
+  "dependencies": {
+    "@mysten-incubation/memwal": "^0.1.1"
+  }
+}

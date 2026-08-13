@@ -1,0 +1,17 @@
+.env
+.env.*
+node_modules/
+.next/
+*.log
+.memwal/
+.claude/settings.local.json
+
+# Working documents — not part of the submission deliverable.
+# These contain personal contact details, machine-specific paths, unfinished
+# drafts, and internal notes-to-self. The deliverables are CLAUDE.md, README.md,
+# walrus-receipts.md, bug-reports.md, the canon seed docs, and demo/.
+FORM-ANSWERS.md
+submission-fields.md
+VIDEO-SCRIPT.md
+TERMINAL-COMMANDS.md
+article-draft.md
