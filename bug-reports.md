@@ -1,15 +1,17 @@
-# Bug Bounty issues — github.com/MystenLabs/MemWal
+# Issues found in Walrus Memory
 
-Track: 5 × $100 WAL. Must be filed **10–24 August 2026**; the previous cycle's don't count.
+Problems encountered while building Continuity Keeper v2, written up for
+[github.com/MystenLabs/MemWal](https://github.com/MystenLabs/MemWal). Most were found by using the
+system rather than reading its documentation.
 
 **Environment for all reports:** `@mysten-incubation/memwal-mcp` **v0.0.6**, Windows 11, Node via
 `npx`, relayer `https://relayer.memory.walrus.xyz`.
 
 **Verification status:** issues 1, 2 and 5 were reproduced directly against v0.0.6 and quote real
 output. Issues 3 and 4 are design-surface gaps confirmed against the shipping `--help` and README —
-re-read those before filing in case they've been addressed.
+worth re-checking against the current version before filing, in case they have since been addressed.
 
-Ordered by actionability, which is what the bounty rewards.
+Ordered by actionability: how quickly a maintainer could act on the report.
 
 ---
 
