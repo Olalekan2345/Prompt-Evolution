@@ -317,12 +317,193 @@ Unknown flags are silently swallowed, and the active network is invisible withou
 
 ---
 
+## Issue 6 — Package migration leaves existing memories permanently unreachable
+
+**Title:** `Package migration imports accounts but not the memory index — restore reports N records, restores 0, recall returns 0`
+
+**Body:**
+
+```markdown
+### Summary
+
+The MemWal on-chain package changed between 2026-07-09 and 2026-08-11 (`0xcee7a6fd…` →
+`0xe7c16fbe…`). Accounts and delegate keys were migrated onto the new package via
+`legacy_import_account` and `legacy_import_delegate_key`. The memory index was not.
+
+Memories written before the migration are still counted by the relayer, but cannot be recalled and
+cannot be restored.
+
+### Reproduction
+
+Using a wallet that wrote memories before the package change:
+
+    restore("<pre-migration-namespace>")
+    -> {"restored":0, "skipped":19, "total":19, "owner":"0x51f2…", "truncated":true}
+
+    recall("<pre-migration-namespace>", any query)
+    -> 0 records
+
+`total: 19` and `skipped: 19` confirm the relayer knows those records exist and are owned by this
+wallet. `restored: 0` and an empty recall mean they cannot be reached by any client operation.
+
+### Impact
+
+Work predating the migration is intact on Walrus and permanently inaccessible through Walrus Memory.
+There is no error, no warning, and no documented migration step — the failure is silent, and the only
+symptom is that recall returns nothing where it previously returned results.
+
+This is compounded by the absence of any blob-enumeration operation (companion issue): a user cannot
+even determine what they have lost.
+
+Two further consequences worth noting:
+
+- Re-authenticating the same wallet against the new package mints a **new** account rather than
+  returning the migrated one, so the previous account ID and agent ID both change with no notice.
+- Authenticating with a delegate key registered against the old package returns `401` whose message
+  lists four possible causes — wrong key, key not registered, account mismatch, staging/mainnet
+  mismatch — none of which is "your delegate is bound to a superseded package". That sends users
+  debugging in four wrong directions.
+
+### Expected
+
+- The migration rebuilds the memory index, or `restore()` can rebuild it on demand
+- `skipped` records report *why* they were skipped
+- A `401` caused by a package-version mismatch says so
+- The package change is announced, with a documented migration path
+```
+
+---
+
+## Issue 7 — Credentials are stored globally, so one project's login destroys another's
+
+**Title:** `~/.memwal/credentials.json is global — logging in from one project silently replaces the credential another project depends on`
+
+**Body:**
+
+```markdown
+### Summary
+
+Credentials live in a single global file at `~/.memwal/credentials.json`. There is no per-project or
+per-account scoping, so authenticating from any directory overwrites the credential every other
+project is using.
+
+### What happened
+
+Working on project A (a Walrus Sessions submission), I authenticated from project B, which had its
+own `--label` configured. The login succeeded and replaced the global credential — different wallet,
+different account, different delegate key. Project A's tooling then silently began targeting project
+B's account. The only visible signal was the `label` field, and nothing warns at the point of use.
+
+Had I written memories in that state, they would have landed on the wrong account, on immutable
+storage, with no delete path.
+
+The CLI does write `credentials.backup-<date>.json` before overwriting, which is genuinely helpful and
+made recovery possible — but it is undocumented, easy to miss, and only holds one generation.
+
+### Impact
+
+Anyone working on two Walrus Memory projects on one machine will hit this. There is no way to hold
+two accounts simultaneously, and no way to scope a credential to a directory.
+
+### Expected
+
+- Per-project credential resolution — for example `.memwal/credentials.json` in the working directory
+  taking precedence over the global file, in the way `.npmrc` and `.git/config` resolve
+- Or named profiles: `--profile <name>` writing to `~/.memwal/credentials.<name>.json`
+- At minimum, a warning when a login is about to replace a credential for a *different* account,
+  showing both the outgoing and incoming account IDs
+```
+
+---
+
+## Issue 8 — `login` silently does nothing when stdin is not a TTY
+
+**Title:** `memwal-mcp login exits 0 without logging in when stdin is not a TTY`
+
+**Body:**
+
+```markdown
+### Summary
+
+`memwal-mcp login` reports success and does nothing when run without an interactive terminal.
+
+### Reproduction
+
+Run the login command from any non-interactive context — a script, a CI step, an editor task runner,
+or any tool that spawns a child process without a TTY:
+
+    npx -y @mysten-incubation/memwal-mcp login --label my-project
+
+Output:
+
+    warn  creds.missing_at_spawn.serving_auth_required
+    info  auth_required_server.started
+    info  auth_required_server.closed
+
+Exit code **0**. No browser opens, no URL is printed, no credential file is written.
+
+### Cause
+
+`dist/index.js` parses `login` correctly and sets `forceLogin`, but a TTY check at line 138 fires
+before `loginFlow()` is reached at line 176:
+
+```js
+if (!process.stdin.isTTY) {
+    // serve the auth-required stub instead
+}
+```
+
+The environment check silently overrides an explicit user command.
+
+### Impact
+
+Scripted or automated setup appears to succeed while leaving the user unauthenticated. The
+consequence surfaces much later as unexplained auth failures, with nothing pointing back to the login
+that never happened.
+
+### Expected
+
+When `login` is passed explicitly and no TTY is available, fail loudly:
+
+    error: `login` requires an interactive terminal (stdin is not a TTY).
+           Run it directly in a terminal, or set credentials via <documented alternative>.
+
+Exit non-zero. The implicit case — a server spawned without credentials — should keep its current
+stub behaviour; only the explicit command should error.
+```
+
+---
+
 ## Filing notes
 
 - Redact `accountId` and `delegateAddress` from any pasted logs. They're public on-chain identifiers,
   not secrets, but they aren't needed to reproduce anything.
-- Issues 1 and 3 reference each other, as do 4 and 5. Cross-link them once filed — reviewers weight
-  a coherent set above five disconnected reports.
-- Issue 1's open question (does `memwal_remember_bulk` accept a `namespace` argument at all?) resolves
-  the moment a `tools/list` call succeeds. Answer it in the issue if you get connected before filing;
-  if not, the issue stands as written, since both possibilities are defects.
+- Several of these reinforce each other — 3 and 6 especially, since you cannot enumerate what the
+  migration made unreachable. Cross-link them once filed; a coherent set reads as one person who
+  understood the system, rather than a scattergun.
+- Issue 1's open question (does `memwal_remember_bulk` accept a `namespace` argument at all?) is
+  answered: the SDK's `RememberBulkItem` type declares an optional per-item `namespace`, so bulk
+  writes *do* support namespaces and the MCP bridge's omission is a straightforward bug.
+
+## How to file
+
+1. Go to <https://github.com/MystenLabs/MemWal/issues> and choose **New issue**.
+2. Paste the **Title** line as the issue title.
+3. Paste the fenced **Body** block as the issue body — it's already Markdown, so it renders directly.
+4. Submit, then copy the resulting URL. It looks like
+   `https://github.com/MystenLabs/MemWal/issues/<number>`.
+5. Record the number next to the issue below as you go.
+
+| # | Filed as | Severity |
+|---|---|---|
+| 6 | `_______` | Data loss — pre-migration memories unreachable |
+| 2 | `_______` | Blocker — relayer refuses all MCP connections |
+| 1 | `_______` | Silent misrouting — bulk writes ignore the pinned namespace |
+| 3 | `_______` | No blob enumeration |
+| 4 | `_______` | No retraction path for a mistaken write |
+| 7 | `_______` | Global credentials — one project's login replaces another's |
+| 8 | `_______` | `login` exits 0 without logging in |
+| 5 | `_______` | Unknown flags silently accepted; active network never reported |
+
+Ordered by severity. Issue 6 first: it is silent, unrecoverable data loss affecting anyone who used
+Walrus Memory before the package changed.
