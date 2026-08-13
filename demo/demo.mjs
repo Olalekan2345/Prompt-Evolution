@@ -42,7 +42,7 @@ await pause(4000);
 
 // ── 2 ────────────────────────────────────────────────────────────────
 await h(2, "A NEW PROPOSAL ARRIVES");
-const proposal = "Let's evolve the Markov prompt instead — cross-agent handoff is a stronger fit.";
+const proposal = "Let's just evolve BuildMEM Agent instead — I wrote it, so I know exactly what to fix.";
 console.log(`  USER: "${proposal}"\n`);
 await pause(2500);
 console.log("  Checking the proposal against canon before acting...\n");
@@ -55,7 +55,7 @@ for (const m of hits.results ?? []) {
 await pause(3000);
 
 // ── 3 ────────────────────────────────────────────────────────────────
-const conflict = (hits.results ?? []).find((m) => /\|rejected\|/.test(m.text ?? "") && /Markov/i.test(m.text ?? ""));
+const conflict = (hits.results ?? []).find((m) => /\|rejected\|/.test(m.text ?? "") && /BuildMEM/i.test(m.text ?? ""));
 await h(3, "CONTRADICTION GUARD");
 if (conflict) {
   const txt = String(conflict.text);

@@ -120,13 +120,21 @@ untouched** — this is an extension, not a repurposing.
 
 ---
 
-### Credit where it's due
+### What deliberately did not change
 
-The original gets something right that its sibling prompts do not. Its **per-entity namespacing** —
-one entity, one namespace — avoids a scaling flaw shared by Continuum and Markov, which recall a flat
-log and try to pick the newest entry. Semantic recall is ordered by similarity, not recency, so those
-routers degrade as history grows and the newest fact stops being reliably the one returned.
-Continuity Keeper sidesteps that by construction.
+The original gets one thing importantly right, and v2 keeps it untouched: **per-entity namespacing**
+— one entity, one namespace.
+
+The obvious alternative is a single flat log per project, recalled and sorted to find the latest
+entry. That looks simpler and fails quietly at scale, because semantic recall is ordered by
+*similarity*, not *recency*: as history grows, the newest fact stops being reliably the one returned,
+and an agent reading canon starts acting on superseded truth without any error to signal it. Scoping
+each entity to its own namespace removes the problem by construction rather than by sorting.
+
+It has a cost, discovered while building the query tool in [`demo/`](demo/): a cross-cutting question
+must decide *which* namespaces to search, and searching all of them exceeds the relayer's rate limit.
+v2 answers that with §1's recall budget — choose the namespaces where an answer is plausible, cap the
+count, and declare what was skipped. The trade-off is worth making, but it is a trade-off.
 
 These five changes are repairs to a sound design, not a rescue of a broken one.
 
@@ -227,7 +235,7 @@ Walrus Memory credentials at runtime; no keys are stored in this repository.
 
 ```bash
 cd demo && npm install
-node ask.mjs --ns prompt-evolution::decision::prompt-choice "why was Markov rejected?"
+node ask.mjs --ns prompt-evolution::decision::prompt-choice "can I evolve my own prompt?"
 node demo.mjs        # recall → contradiction guard → dedup gap → mainnet verification
 node calibrate.mjs   # reproduces the calibration table above
 ```
