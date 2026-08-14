@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" font-family="'Segoe UI',system-ui,-apple-system,sans-serif">
+  <defs>
+    <linearGradient id="ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a5f5a"/>
+      <stop offset="100%" stop-color="#0d3733"/>
+    </linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8a6a4f"/>
+      <stop offset="100%" stop-color="#6b5039"/>
+    </linearGradient>
+    <path id="arcTop" d="M 256,256 m -178,0 a 178,178 0 0 1 356,0" fill="none"/>
+  </defs>
+
+  <!-- outer disc -->
+  <circle cx="256" cy="256" r="252" fill="url(#ring)"/>
+  <circle cx="256" cy="256" r="252" fill="none" stroke="#f0a830" stroke-width="6"/>
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#f0a830" stroke-width="2.5" stroke-dasharray="10 9" opacity="0.75"/>
+  <circle cx="256" cy="256" r="206" fill="#0a2b28"/>
+
+  <!-- arc title -->
+  <text font-size="35" font-weight="700" fill="#f0a830" letter-spacing="5">
+    <textPath href="#arcTop" startOffset="50%" text-anchor="middle">CONTINUITY KEEPER</textPath>
+  </text>
+
+  <!-- ===== walrus ===== -->
+  <!-- body/head -->
+  <ellipse cx="256" cy="243" rx="92" ry="80" fill="url(#face)"/>
+  <!-- brow -->
+  <ellipse cx="256" cy="212" rx="78" ry="42" fill="#96775a"/>
+  <!-- muzzle -->
+  <ellipse cx="256" cy="272" rx="62" ry="46" fill="#a8886a"/>
+  <!-- nose -->
+  <ellipse cx="256" cy="252" rx="15" ry="11" fill="#4a3527"/>
+  <!-- eyes -->
+  <circle cx="222" cy="215" r="11" fill="#1c1410"/>
+  <circle cx="290" cy="215" r="11" fill="#1c1410"/>
+  <circle cx="225" cy="211" r="4" fill="#fff" opacity="0.9"/>
+  <circle cx="293" cy="211" r="4" fill="#fff" opacity="0.9"/>
+  <!-- spectacles, a nod to the keeper -->
+  <circle cx="222" cy="215" r="22" fill="none" stroke="#f0a830" stroke-width="4" opacity="0.85"/>
+  <circle cx="290" cy="215" r="22" fill="none" stroke="#f0a830" stroke-width="4" opacity="0.85"/>
+  <path d="M 244 215 L 268 215" stroke="#f0a830" stroke-width="4" opacity="0.85"/>
+  <!-- tusks -->
+  <path d="M 234 285 q -5 42 -13 60 q 12 7 20 0 q 2 -34 5 -60 z" fill="#f5f0e6"/>
+  <path d="M 278 285 q 5 42 13 60 q -12 7 -20 0 q -2 -34 -5 -60 z" fill="#f5f0e6"/>
+  <!-- whiskers -->
+  <g stroke="#d9c4ad" stroke-width="2.5" stroke-linecap="round" opacity="0.85">
+    <path d="M 214 272 L 176 264"/><path d="M 214 280 L 178 280"/><path d="M 214 288 L 180 296"/>
+    <path d="M 298 272 L 336 264"/><path d="M 298 280 L 334 280"/><path d="M 298 288 L 332 296"/>
+  </g>
+  <!-- raised flipper: the "stop" that defines v2 -->
+  <g transform="translate(366,238) rotate(12)">
+    <ellipse cx="0" cy="0" rx="30" ry="42" fill="#7a5c43"/>
+    <g stroke="#5c4432" stroke-width="3" stroke-linecap="round">
+      <path d="M -12 -22 L -14 16"/><path d="M 0 -26 L 0 18"/><path d="M 12 -22 L 14 16"/>
+    </g>
+  </g>
+
+  <!-- status seals -->
+  <g font-size="15" font-weight="700" text-anchor="middle">
+    <rect x="96" y="352" width="104" height="34" rx="17" fill="#14532d" stroke="#4ade80" stroke-width="2"/>
+    <text x="148" y="375" fill="#86efac">SETTLED</text>
+
+    <rect x="204" y="352" width="104" height="34" rx="17" fill="#3f2d0a" stroke="#fbbf24" stroke-width="2"/>
+    <text x="256" y="375" fill="#fcd34d">OPEN</text>
+
+    <rect x="312" y="352" width="104" height="34" rx="17" fill="#4c1414" stroke="#f87171" stroke-width="2"/>
+    <text x="364" y="375" fill="#fca5a5">REJECTED</text>
+  </g>
+
+  <!-- V2 -->
+  <text x="256" y="443" text-anchor="middle" font-size="62" font-weight="800" fill="#f0a830" letter-spacing="4">V2</text>
+  <text x="256" y="470" text-anchor="middle" font-size="15" font-weight="600" fill="#6ea8a0" letter-spacing="4">CANON ON WALRUS</text>
+</svg>
