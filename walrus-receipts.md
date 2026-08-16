@@ -30,10 +30,14 @@ coalesce facts into a single blob. So blob count ≈ record count.
 | # | blob_id | record |
 |---|---|---|
 | 1 | `v14MnlqtllF_lCLMeEjK_Zu8Cs_G482_BlXMA7s1Wkk` | settled — Continuity Keeper is the prompt being evolved |
-| 2 | `ytaUN2aIw6y0VuRH-aWeuYdAMUUjPmTNeC0KHi3zE5Y` | rejected — BuildMEM Agent (authored by submitter) |
-| 3 | `XY0aCwiW2FkMcxZI_Ruobto2AcyLikliGDxZ_a6iT4k` | rejected — Continuum |
-| 4 | `3lq4bBiTZ8HoPrhPp8S7HKSSsyo38mGYmdEoXwSlVGw` | rejected — Markov |
-| 5 | `ZeUjKZlPRXMudAq8kcm9QyY-SOWRAgSy8Qm7vDPzv4g` | rejected — Exam Mistake Memory |
+| 2 | `ytaUN2aIw6y0VuRH-aWeuYdAMUUjPmTNeC0KHi3zE5Y` | rejected alternative — barred by the rules |
+| 3 | `XY0aCwiW2FkMcxZI_Ruobto2AcyLikliGDxZ_a6iT4k` | rejected alternative |
+| 4 | `3lq4bBiTZ8HoPrhPp8S7HKSSsyo38mGYmdEoXwSlVGw` | rejected alternative |
+| 5 | `ZeUjKZlPRXMudAq8kcm9QyY-SOWRAgSy8Qm7vDPzv4g` | rejected alternative |
+
+These five sit in one namespace because a decision and the options it ruled out belong together —
+that is what lets the guard fire on the specific alternative being re-proposed, rather than on the
+decision in general.
 
 **Batch 1 subtotal: 5 blobs.**
 
@@ -286,11 +290,11 @@ Query: *"which prompt is being evolved"* against the namespace above.
 
 | distance | record |
 |---|---|
-| 0.4193 | rejected — BuildMEM Agent |
+| 0.4193 | rejected alternative |
 | 0.4886 | settled — Continuity Keeper |
-| 0.5155 | rejected — Continuum |
-| 0.5320 | rejected — Markov |
-| 0.5421 | rejected — Exam Mistake Memory |
+| 0.5155 | rejected alternative |
+| 0.5320 | rejected alternative |
+| 0.5421 | rejected alternative |
 
 > **These are NOT dedup calibration values.** They are distances from a *topical query* to each
 > record. §4 dedup measures the distance from a *candidate record's own text* to its nearest
@@ -307,3 +311,4 @@ Query: *"which prompt is being evolved"* against the namespace above.
 | blob_id | namespace | date |
 |---|---|---|
 | `Z4DJQxUsOpnZ6dv8QHPkCLIvWzroNqwlkzedjB75Pto` | `rentpact::decision::pricing` | 2026-08-13 |
+| `cCLNQjtHnwvUxk148qVL5TlLPExmQZYCDnOp6wSyEAU` | `rentpact::decision::pricing` | 2026-08-14 |

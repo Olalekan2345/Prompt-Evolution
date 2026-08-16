@@ -19,23 +19,23 @@ injection (filed as a bug — see [`bug-reports.md`](bug-reports.md)).
 
 ## 1. `prompt-evolution::decision::prompt-choice`
 
-The chosen target plus every rejected alternative, so a later session that proposes reopening the
-choice hits the contradiction guard on the specific alternative it is reopening.
+Five records: the settled choice, plus one per alternative that was ruled out.
 
 ```
-[canon:decision|settled|2026-08-11] prompt-choice — Continuity Keeper (Creative Writing & Canon Management) is the Prompt Jam prompt being evolved for Walrus Sessions 67; the submission is Continuity Keeper v2. (as of: session 2026-08-11 canon seed)
+[canon:decision|settled|2026-08-11] prompt-choice — Continuity Keeper (Creative Writing & Canon Management) is the prompt being evolved; the submission is Continuity Keeper v2. (as of: session 2026-08-11 canon seed)
 
-[canon:decision|rejected|2026-08-11] prompt-choice — BuildMEM Agent rejected as the evolution target: the author wrote it, and the rules bar original creators from evolving their own prompt. (as of: session 2026-08-11 canon seed)
-
-[canon:decision|rejected|2026-08-11] prompt-choice — Continuum rejected as the evolution target: too adjacent to the author's own BuildMEM Agent, and too tightly built to improve meaningfully. (as of: session 2026-08-11 canon seed)
-
-[canon:decision|rejected|2026-08-11] prompt-choice — Markov rejected as the evolution target: too adjacent to the author's own BuildMEM Agent, and too tightly built to improve meaningfully. (as of: session 2026-08-11 canon seed)
-
-[canon:decision|rejected|2026-08-11] prompt-choice — Exam Mistake Memory rejected as the evolution target: its flaws are genuine, but the author has no active study context before the 2026-08-24 deadline, so the real-world evidence would have to be staged. (as of: session 2026-08-11 canon seed)
+[canon:decision|rejected|2026-08-11] prompt-choice — <alternative> rejected as the evolution target: <reason>. (as of: session 2026-08-11 canon seed)
+    × 4, one per alternative considered
 ```
 
-Continuum and Markov are deliberately two records, not one. They share reasoning but are two distinct
-rejections, and each has to block a reopen independently.
+**Why one record per alternative rather than a single "the others were rejected".** A combined record
+surfaces on recall but cannot contradict anything specific. Split, each one blocks a reopen of the
+alternative it names — the guard fires on precisely what is being re-proposed, with the reason
+attached. That granularity is the whole reason the decision type carries a status.
+
+One of the four is the author's own earlier prompt, ruled out because the rules bar original creators
+from evolving their own work. That record is the one `demo/demo.mjs` uses to demonstrate the
+contradiction guard, since the constraint it encodes is a rule rather than a preference.
 
 ## 2. `prompt-evolution::decision::fiction-path`
 
